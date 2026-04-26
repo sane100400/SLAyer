@@ -1,0 +1,54 @@
+# Logs
+logs
+*.log
+
+dist
+node_modules/
+src-tauri/
+
+# Python cache
+**/__pycache__/
+**/*.pyc
+*.egg-info/
+
+# Local config
+.slayer.yml
+
+# Dataset artifacts
+dataset/
+!dataset/
+!dataset/slayer-bench-v0/
+!dataset/slayer-bench-v0/**
+!dataset/ai-bench-v0/
+!dataset/ai-bench-v0/**
+dataset/dataset/
+dataset/drepos/
+dataset/repos/
+dataset/web/
+dataset/analysis.*
+dataset/*_repos.*
+dataset/vuln_stats*
+dataset/vulns_*
+dataset/**/*.log
+
+# RAG index (generated from dataset)
+tools/
+tools/.chroma_index/
+tools/pattern_report.json
+tools/*_pattern_report.json
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
