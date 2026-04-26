@@ -36,7 +36,33 @@ def _unified_diff(original: str, patched: str, file_path: str) -> str:
     return ''.join(diff)
 
 
-def build_patch_prompt(path: Path, source: str, violations: list[Violation]) -> str:
+_MAX_PROMPT_LINES = 200
+_WINDOW_CONTEXT = 90
+
+
+def _violation_window(source: str, violation_line: int) -> tuple[int, int] | None:
+    """Return (start, end) 0-indexed line slice bounds if file exceeds threshold."""
+    lines = source.splitlines()
+    if len(lines) <= _MAX_PROMPT_LINES:
+        return None
+    # violation_line is 1-indexed
+    center = violation_line - 1
+    start = max(0, center - _WINDOW_CONTEXT)
+    end = min(len(lines), center + _WINDOW_CONTEXT + 1)
+    return start, end
+
+
+def _splice_window(original: str, patched_section: str, start: int, end: int) -> str:
+    """Replace lines start..end in original with patched_section lines."""
+    orig_lines = original.splitlines(keepends=True)
+    patch_lines = patched_section.splitlines(keepends=True)
+    # Ensure last line of patch has newline when original did
+    if patch_lines and not patch_lines[-1].endswith('\n') and orig_lines:
+        patch_lines[-1] += '\n'
+    return ''.join(orig_lines[:start] + patch_lines + orig_lines[end:])
+
+
+def build_patch_prompt(path: Path, source: str, violations: list[Violation], window: tuple[int, int] | None = None) -> str:
     language = detect_language(path)
     unique_violations = {violation.rule_name: violation for violation in violations}
     rule_guidance = '\n'.join(
@@ -50,13 +76,26 @@ def build_patch_prompt(path: Path, source: str, violations: list[Violation]) -> 
         return d
 
     violations_json = json.dumps([_redact_violation(v) for v in violations], ensure_ascii=False, indent=2)
+
+    if window is not None:
+        start, end = window
+        lines = source.splitlines()
+        code_section = '\n'.join(lines[start:end])
+        total = len(lines)
+        file_ref = f'{path} (lines {start + 1}–{end} of {total})'
+        return_instr = f'Return only the updated code for lines {start + 1}–{end}. Do not output any code outside this range.'
+    else:
+        code_section = source
+        file_ref = str(path)
+        return_instr = 'Return only the full updated file contents for this file.'
+
     return f"""
 You are patching one {language} source file for SLAyer.
-Return only the full updated file contents for this file. Do not add markdown fences or explanations.
+{return_instr} Do not add markdown fences or explanations.
 Only fix the violations listed below. Do not change code that is unrelated to those violations.
 Keep variable names, comments, formatting, and behavior unchanged unless a listed violation requires a security fix.
 
-File: {path}
+File: {file_ref}
 Violations:
 {violations_json}
 
@@ -67,7 +106,7 @@ Patch guidance:
 - Do not change unrelated lines.
 
 Code:
-{source}
+{code_section}
 """.strip()
 
 
@@ -145,7 +184,9 @@ def _patch_file_incremental(
         attempted.add(attempt_key)
 
         source = path.read_text(encoding='utf-8', errors='replace')
-        prompt = build_patch_prompt(path, redact_secrets(source), [violation])
+        redacted = redact_secrets(source)
+        window = _violation_window(redacted, violation.line)
+        prompt = build_patch_prompt(path, redacted, [violation], window=window)
 
         try:
             raw_output, _ = run_ai(
@@ -155,7 +196,11 @@ def _patch_file_incremental(
                 cwd=path.parent,
                 candidate=candidate,
             )
-            patched = extract_code(raw_output)
+            section = extract_code(raw_output)
+            if window is not None:
+                patched = _splice_window(source, section, window[0], window[1])
+            else:
+                patched = section
             validate_syntax(path, patched)
         except PatchValidationError as exc:
             if progress_fn:
