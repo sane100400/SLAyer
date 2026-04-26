@@ -645,6 +645,15 @@ code.inline{
 
       <div class="slayer-logo"><span class="sl">SL</span><span class="cut">/</span><span class="yer">yer</span></div>
 
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--T3);letter-spacing:.12em;text-transform:uppercase">SL</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--T4)">=</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--amber)">Service Level Agreement</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--T4)">·</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--T3)">위반 즉시 배포를</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--R2);font-weight:700">잘라냄(slay)</span>
+      </div>
+
       <h1 class="hero" style="font-size:clamp(40px,5.5vw,72px);margin-bottom:20px">
         AI가 짠 코드,<br>
         그대로 배포했나요?<br>
@@ -653,7 +662,8 @@ code.inline{
 
       <p class="s0-sub">
         Claude · Cursor · Copilot로 만든 코드엔<br>
-        연구로 실증된 <strong style="color:var(--T)">7대 보안 취약 패턴</strong>이 있다.
+        연구로 실증된 <strong style="color:var(--T)">7대 보안 취약 패턴</strong>이 있다.<br>
+        <span style="font-size:.9em;color:var(--T3)">SLAyer는 그 패턴을 탐지하고, SLA 룰로 배포를 통제한다.</span>
       </p>
 
       <div style="font-family:var(--mono);font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--T3);margin-top:28px;display:flex;gap:14px;flex-wrap:wrap">
@@ -806,13 +816,17 @@ code.inline{
       <div style="background:var(--bg2);border:1px solid var(--line);padding:14px 18px">
         <div style="font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--T3);margin-bottom:10px">채워지지 않은 공백</div>
         <div style="font-size:15px;color:var(--T);line-height:1.7;font-weight:500">
-          AI로 코드를 짜는 개발자는 폭발적으로 늘었다.<br>
-          그 코드에 <em style="font-style:normal;color:var(--R2)">특화된 보안 스캐너</em>는 없었다.
+          바이브코더가 배포한 코드엔 항상 이 패턴이 있다.<br>
+          그걸 잡아주는 도구는, <em style="font-style:normal;color:var(--R2)">아직 없었다.</em>
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:var(--T2);line-height:1.6">
+          기존 스캐너는 AI 생성 특유의 반복 패턴을 모른다.<br>
+          SLAyer는 <strong style="color:var(--T)">바이브코더 레포를 직접 수집해서 룰을 만들었다.</strong>
         </div>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <span style="font-family:var(--mono);font-size:11px;padding:3px 10px;border:1px solid var(--Grim);color:var(--G2)">AI 생성 패턴 특화 룰셋</span>
-          <span style="font-family:var(--mono);font-size:11px;padding:3px 10px;border:1px solid var(--Grim);color:var(--G2)">설정 없이 즉시 실행</span>
-          <span style="font-family:var(--mono);font-size:11px;padding:3px 10px;border:1px solid var(--Grim);color:var(--G2)">자동 패치</span>
+          <span style="font-family:var(--mono);font-size:11px;padding:3px 10px;border:1px solid var(--Grim);color:var(--G2)">AI 패턴 특화 룰셋</span>
+          <span style="font-family:var(--mono);font-size:11px;padding:3px 10px;border:1px solid var(--Grim);color:var(--G2)">설정 0 · 즉시 실행</span>
+          <span style="font-family:var(--mono);font-size:11px;padding:3px 10px;border:1px solid var(--Grim);color:var(--G2)">AI CLI 자동 패치</span>
         </div>
       </div>
     </div>
@@ -930,9 +944,12 @@ code.inline{
   <div class="slide-inner">
     <div class="overline">03 — Solution</div>
     <h2 class="section-title">
-      오염 → <em>정화</em>.<br>
+      SLA 룰 정의 → <em>게이트 실행</em>.<br>
       세 명령, 끝.
     </h2>
+    <p style="font-size:13px;color:var(--T3);margin-bottom:14px;font-family:var(--mono)">
+      <span style="color:var(--amber)">Service Level Agreement</span> — 팀이 정한 보안 규칙을 위반하면 SLAyer가 배포를 차단(slay)한다.
+    </p>
 
     <!-- State bar -->
     <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;margin-bottom:20px;border:1px solid var(--line)">
@@ -952,61 +969,42 @@ code.inline{
       </div>
     </div>
 
-    <!-- Diff view -->
+    <!-- Terminal streaming output -->
     <div style="border:1px solid var(--line);overflow:hidden;margin:16px 0">
-      <div style="display:flex;align-items:center;gap:10px;padding:9px 16px;background:var(--bg2);border-bottom:1px solid var(--line)">
-        <div style="width:6px;height:6px;border-radius:50%;background:var(--R);box-shadow:0 0 5px rgba(211,21,21,.5)"></div>
-        <span style="font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--T3)">slayer patch . — demo_vuln.py</span>
-        <span style="font-family:var(--mono);font-size:10px;color:var(--G2);margin-left:auto">✓ patched via claude</span>
+      <div style="display:flex;align-items:center;gap:7px;padding:8px 14px;background:var(--bg2);border-bottom:1px solid var(--line)">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--T3);margin-left:8px;letter-spacing:.06em">bash — 80×24</span>
       </div>
-      <div style="font-family:var(--mono);font-size:12.5px;line-height:1.75;background:#0e0c0a">
-        <div style="padding:2px 0 2px 0;color:var(--T3);background:var(--bg2);padding:4px 16px;font-size:10px;letter-spacing:.1em">@@ -3,29 +3,29 @@ demo_vuln.py</div>
-
-        <div style="padding:3px 16px;background:rgba(211,21,21,.12);border-left:3px solid var(--R);display:flex;gap:12px">
-          <span style="color:var(--R2);user-select:none;width:16px">−</span>
-          <span style="color:rgba(240,36,36,.9)">API_KEY = <span style="background:rgba(211,21,21,.25);padding:0 3px">"sk-prod-abc123..."</span></span>
+      <div style="font-family:var(--mono);font-size:12px;line-height:1.8;background:#0a0908;padding:10px 0">
+        <div style="padding:0 16px;margin-bottom:6px">
+          <span style="color:var(--G2)">$</span>
+          <span style="color:var(--T)"> slayer patch demo_vuln.py</span>
         </div>
-        <div style="padding:3px 16px;background:rgba(14,160,64,.1);border-left:3px solid var(--G);display:flex;gap:12px">
-          <span style="color:var(--G2);user-select:none;width:16px">+</span>
-          <span style="color:rgba(26,204,88,.9)">API_KEY = os.environ.<span style="background:rgba(14,160,64,.2);padding:0 3px">get("API_KEY", "")</span></span>
-        </div>
+        <div style="padding:0 16px;margin-bottom:10px;color:var(--T3);font-size:11px;letter-spacing:.06em">  SLAyer  ·  demo_vuln.py</div>
 
-        <div style="padding:3px 16px;color:var(--T4);font-size:11px">  ···</div>
+        <div style="padding:1px 16px"><span style="color:var(--G2);font-weight:700">  ✓ </span><span style="color:var(--T);font-weight:600">NO_HARDCODED_SECRETS</span><span style="color:var(--T3)">  demo_vuln.py:10</span></div>
+        <div style="padding:2px 20px;background:rgba(211,21,21,.11);border-left:2px solid var(--R);margin:1px 0"><span style="color:var(--R2)">-  API_KEY = "sk-prod-a3f9...c22b"</span></div>
+        <div style="padding:2px 20px;background:rgba(14,160,64,.09);border-left:2px solid var(--G);margin:1px 0 8px 0"><span style="color:var(--G2)">+  API_KEY = os.environ.get("API_KEY", "")</span></div>
 
-        <div style="padding:3px 16px;background:rgba(211,21,21,.12);border-left:3px solid var(--R);display:flex;gap:12px">
-          <span style="color:var(--R2);user-select:none;width:16px">−</span>
-          <span style="color:rgba(240,36,36,.9)">DEBUG = <span style="background:rgba(211,21,21,.25);padding:0 3px">True</span></span>
-        </div>
-        <div style="padding:3px 16px;background:rgba(14,160,64,.1);border-left:3px solid var(--G);display:flex;gap:12px">
-          <span style="color:var(--G2);user-select:none;width:16px">+</span>
-          <span style="color:rgba(26,204,88,.9)">DEBUG = os.environ.<span style="background:rgba(14,160,64,.2);padding:0 3px">get("DEBUG","false") == "true"</span></span>
-        </div>
+        <div style="padding:1px 16px"><span style="color:var(--G2);font-weight:700">  ✓ </span><span style="color:var(--T);font-weight:600">NO_DEBUG_MODE</span><span style="color:var(--T3)">  demo_vuln.py:12</span></div>
+        <div style="padding:2px 20px;background:rgba(211,21,21,.11);border-left:2px solid var(--R);margin:1px 0"><span style="color:var(--R2)">-  DEBUG = True</span></div>
+        <div style="padding:2px 20px;background:rgba(14,160,64,.09);border-left:2px solid var(--G);margin:1px 0 8px 0"><span style="color:var(--G2)">+  DEBUG = os.environ.get("DEBUG","false") == "true"</span></div>
 
-        <div style="padding:3px 16px;color:var(--T4);font-size:11px">  ···</div>
+        <div style="padding:1px 16px"><span style="color:var(--G2);font-weight:700">  ✓ </span><span style="color:var(--T);font-weight:600">SQL_PARAM_BINDING</span><span style="color:var(--T3)">  demo_vuln.py:22</span></div>
+        <div style="padding:2px 20px;background:rgba(211,21,21,.11);border-left:2px solid var(--R);margin:1px 0"><span style="color:var(--R2)">-  cursor.execute(f"SELECT * WHERE name='{q}'")</span></div>
+        <div style="padding:2px 20px;background:rgba(14,160,64,.09);border-left:2px solid var(--G);margin:1px 0 8px 0"><span style="color:var(--G2)">+  cursor.execute("SELECT * WHERE name=?", (q,))</span></div>
 
-        <div style="padding:3px 16px;background:rgba(211,21,21,.12);border-left:3px solid var(--R);display:flex;gap:12px">
-          <span style="color:var(--R2);user-select:none;width:16px">−</span>
-          <span style="color:rgba(240,36,36,.9)">cursor.execute(<span style="background:rgba(211,21,21,.25);padding:0 3px">f"SELECT * WHERE name='{q}'"</span>)</span>
-        </div>
-        <div style="padding:3px 16px;background:rgba(14,160,64,.1);border-left:3px solid var(--G);display:flex;gap:12px">
-          <span style="color:var(--G2);user-select:none;width:16px">+</span>
-          <span style="color:rgba(26,204,88,.9)">cursor.execute(<span style="background:rgba(14,160,64,.2);padding:0 3px">"SELECT * WHERE name=?", (q,)</span>)</span>
-        </div>
+        <div style="padding:1px 16px"><span style="color:var(--G2);font-weight:700">  ✓ </span><span style="color:var(--T);font-weight:600">NO_EXEC</span><span style="color:var(--T3)">  demo_vuln.py:27</span></div>
+        <div style="padding:2px 20px;background:rgba(211,21,21,.11);border-left:2px solid var(--R);margin:1px 0"><span style="color:var(--R2)">-  subprocess.run(f"analyze {f}", shell=True)</span></div>
+        <div style="padding:2px 20px;background:rgba(14,160,64,.09);border-left:2px solid var(--G);margin:1px 0 8px 0"><span style="color:var(--G2)">+  subprocess.run(["analyze", f], shell=False)</span></div>
 
-        <div style="padding:3px 16px;color:var(--T4);font-size:11px">  ···</div>
-
-        <div style="padding:3px 16px;background:rgba(211,21,21,.12);border-left:3px solid var(--R);display:flex;gap:12px">
-          <span style="color:var(--R2);user-select:none;width:16px">−</span>
-          <span style="color:rgba(240,36,36,.9)">subprocess.run(f"analyze {f}", <span style="background:rgba(211,21,21,.25);padding:0 3px">shell=True</span>)</span>
-        </div>
-        <div style="padding:3px 16px;background:rgba(14,160,64,.1);border-left:3px solid var(--G);display:flex;gap:12px">
-          <span style="color:var(--G2);user-select:none;width:16px">+</span>
-          <span style="color:rgba(26,204,88,.9)">subprocess.run(<span style="background:rgba(14,160,64,.2);padding:0 3px">["analyze", f], shell=False</span>)</span>
-        </div>
-
-        <div style="padding:6px 16px;background:var(--Gfog);border-top:1px solid var(--Grim);display:flex;gap:24px">
-          <span style="color:var(--G2);font-size:11px">✓ 5 violations fixed</span>
-          <span style="color:var(--T3);font-size:11px">🚀 Deployment Approved</span>
+        <div style="padding:8px 16px 4px;border-top:1px solid var(--line);margin-top:6px;display:flex;gap:24px;align-items:center">
+          <span style="color:var(--G2);font-weight:600">4 violations fixed</span>
+          <span style="color:var(--T4)">·</span>
+          <span style="color:var(--G2)">🚀 Deployment Approved</span>
+          <span style="color:var(--T3);margin-left:auto;font-size:10px">exit 0</span>
         </div>
       </div>
     </div>
@@ -1090,8 +1088,8 @@ code.inline{
             <div style="font-family:var(--mono);font-size:9px;color:var(--T3);letter-spacing:.1em;text-transform:uppercase;text-align:center">Patch<br>Quality</div>
           </div>
           <div style="padding:10px 14px;background:var(--bg1)">
-            <div style="font-size:13px;font-weight:600;color:var(--T);margin-bottom:3px"><code class="inline">ast.parse</code> / <code class="inline">node --check</code> / <code class="inline">tsc --noEmit</code> 구문 검증</div>
-            <div style="font-family:var(--mono);font-size:11px;color:var(--T3)">검증 실패 시 원본 복원 · symlink 경계 이탈 방어 · 패치 후 재스캔으로 효과 확인</div>
+            <div style="font-size:13px;font-weight:600;color:var(--T);margin-bottom:3px">취약점 <em style="font-style:normal;color:var(--R2)">1개씩</em> 패치 → 재스캔 → 반복 (최대 20회 루프)</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--T3)">매 패치마다 ast.parse / node --check / tsc --noEmit 문법 검증 · 실패 시 원본 복원 · symlink 경계 방어</div>
           </div>
         </div>
 
