@@ -9,6 +9,7 @@ description = "SLAyer CLI for deterministic web-service security scanning and AI
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "SLAyer Team" }]
+license = { file = "LICENSE" }
 dependencies = [
   "pydantic>=2.9,<3",
   "typer>=0.12,<1",
