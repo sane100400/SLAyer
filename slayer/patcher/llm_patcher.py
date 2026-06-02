@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 import tempfile
+from collections import Counter
 from collections.abc import Callable
 from pathlib import Path
 
@@ -60,6 +61,10 @@ def _splice_window(original: str, patched_section: str, start: int, end: int) ->
     if patch_lines and not patch_lines[-1].endswith('\n') and orig_lines:
         patch_lines[-1] += '\n'
     return ''.join(orig_lines[:start] + patch_lines + orig_lines[end:])
+
+
+def _violation_signature(violation: Violation) -> tuple[str, str]:
+    return violation.rule_id, violation.code_snippet.strip()[:120]
 
 
 def build_patch_prompt(path: Path, source: str, violations: list[Violation], window: tuple[int, int] | None = None) -> str:
@@ -222,10 +227,20 @@ def _patch_file_incremental(
             if file_name not in patched_files:
                 patched_files.append(file_name)
 
-            key = (file_name, violation.rule_id, violation.line)
-            if key not in explained_keys:
-                patch_explanations.append(patch_explanation_for(violation, file=file_name))
-                explained_keys.add(key)
+            post_patch_scan = scan_path(path)
+            post_patch_violations = [v for v in post_patch_scan.violations if v.file == file_name]
+            remaining_signatures = Counter(_violation_signature(v) for v in post_patch_violations)
+
+            for fixed_violation in current_violations:
+                signature = _violation_signature(fixed_violation)
+                if remaining_signatures[signature]:
+                    remaining_signatures[signature] -= 1
+                    continue
+
+                key = (file_name, fixed_violation.rule_id, fixed_violation.line)
+                if key not in explained_keys:
+                    patch_explanations.append(patch_explanation_for(fixed_violation, file=file_name))
+                    explained_keys.add(key)
 
             if progress_fn:
                 progress_fn('patched', violation, diff)
